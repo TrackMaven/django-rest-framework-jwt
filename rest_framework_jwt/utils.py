@@ -23,10 +23,10 @@ def jwt_payload_handler(user):
         username = user.username
 
     return {
-        'user_id': user.pk,
-        'email': user.email,
-        'username': username,
-        'exp': datetime.utcnow() + api_settings.JWT_EXPIRATION_DELTA
+        "user_id": user.pk,
+        "email": user.email,
+        "username": username,
+        "exp": datetime.utcnow() + api_settings.JWT_EXPIRATION_DELTA,
     }
 
 
@@ -34,22 +34,16 @@ def jwt_get_user_id_from_payload_handler(payload):
     """
     Override this function if user_id is formatted differently in payload
     """
-    user_id = payload.get('user_id')
+    user_id = payload.get("user_id")
     return user_id
 
 
 def jwt_encode_handler(payload):
-    return jwt.encode(
-        payload,
-        api_settings.JWT_SECRET_KEY,
-        api_settings.JWT_ALGORITHM
-    ).decode('utf-8')
+    return jwt.encode(payload, api_settings.JWT_SECRET_KEY, api_settings.JWT_ALGORITHM).decode("utf-8")
 
 
 def jwt_decode_handler(token):
-    options = {
-        'verify_exp': api_settings.JWT_VERIFY_EXPIRATION,
-    }
+    options = {"verify_exp": api_settings.JWT_VERIFY_EXPIRATION}
 
     return jwt.decode(
         token,
@@ -59,7 +53,7 @@ def jwt_decode_handler(token):
         leeway=api_settings.JWT_LEEWAY,
         audience=api_settings.JWT_AUDIENCE,
         issuer=api_settings.JWT_ISSUER,
-        algorithms=[api_settings.JWT_ALGORITHM]
+        algorithms=[api_settings.JWT_ALGORITHM],
     )
 
 
@@ -78,6 +72,4 @@ def jwt_response_payload_handler(token, user=None, request=None):
         }
 
     """
-    return {
-        'token': token
-    }
+    return {"token": token}

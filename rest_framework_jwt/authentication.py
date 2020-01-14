@@ -2,8 +2,7 @@ import jwt
 from django.utils.encoding import smart_text
 from django.utils.translation import ugettext as _
 from rest_framework import exceptions
-from rest_framework.authentication import (BaseAuthentication,
-                                           get_authorization_header)
+from rest_framework.authentication import BaseAuthentication, get_authorization_header
 
 from rest_framework_jwt import utils
 from rest_framework_jwt.settings import api_settings
@@ -30,10 +29,10 @@ class BaseJSONWebTokenAuthentication(BaseAuthentication):
         try:
             payload = jwt_decode_handler(jwt_value)
         except jwt.ExpiredSignature:
-            msg = _('Signature has expired.')
+            msg = _("Signature has expired.")
             raise exceptions.AuthenticationFailed(msg)
         except jwt.DecodeError:
-            msg = _('Error decoding signature.')
+            msg = _("Error decoding signature.")
             raise exceptions.AuthenticationFailed(msg)
         except jwt.InvalidTokenError:
             raise exceptions.AuthenticationFailed()
@@ -54,10 +53,10 @@ class BaseJSONWebTokenAuthentication(BaseAuthentication):
             try:
                 user = User.objects.get(pk=user_id, is_active=True)
             except User.DoesNotExist:
-                msg = _('Invalid signature.')
+                msg = _("Invalid signature.")
                 raise exceptions.AuthenticationFailed(msg)
         else:
-            msg = _('Invalid payload.')
+            msg = _("Invalid payload.")
             raise exceptions.AuthenticationFailed(msg)
 
         return user
@@ -71,7 +70,8 @@ class JSONWebTokenAuthentication(BaseJSONWebTokenAuthentication):
 
         Authorization: JWT eyJhbGciOiAiSFMyNTYiLCAidHlwIj
     """
-    www_authenticate_realm = 'api'
+
+    www_authenticate_realm = "api"
 
     def get_jwt_value(self, request):
         auth = get_authorization_header(request).split()
@@ -81,11 +81,10 @@ class JSONWebTokenAuthentication(BaseJSONWebTokenAuthentication):
             return None
 
         if len(auth) == 1:
-            msg = _('Invalid Authorization header. No credentials provided.')
+            msg = _("Invalid Authorization header. No credentials provided.")
             raise exceptions.AuthenticationFailed(msg)
         elif len(auth) > 2:
-            msg = _('Invalid Authorization header. Credentials string '
-                    'should not contain spaces.')
+            msg = _("Invalid Authorization header. Credentials string " "should not contain spaces.")
             raise exceptions.AuthenticationFailed(msg)
 
         return auth[1]
